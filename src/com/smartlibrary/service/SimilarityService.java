@@ -30,7 +30,7 @@ public class SimilarityService {
         Set<Integer> selected = VertexCoverApprox.chooseDocumentsToReview(edges);
         List<String> pairs = new ArrayList<>();
         for (VertexCoverApprox.Edge edge : edges) {
-            pairs.add(documents.get(edge.first()).title() + "  ↔  " + documents.get(edge.second()).title());
+            pairs.add(documents.get(edge.first()).title() + "  <->  " + documents.get(edge.second()).title());
         }
         List<Document> review = selected.stream().sorted().map(documents::get).toList();
         return new ConflictReport(pairs, review);

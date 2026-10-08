@@ -1,52 +1,54 @@
-# SmartLibrary — Eclipse Java DSA Hackathon Project
+# SmartLibrary — Java DSA Hackathon Project
 
-SmartLibrary is a **plain Java Swing desktop application** for a sample digital library. It has no Maven build, server, database, or external runtime libraries. The project is ready to import and run in Eclipse with Java 17 or newer.
+SmartLibrary is a **pure Java console application** for a sample digital library. Run it in Eclipse's Console view. There is no frontend page, Swing window, server, database, Maven dependency, or external library.
 
 ## Run in Eclipse
 
-1. Open Eclipse and choose **File → Import → General → Existing Projects into Workspace**.
-2. Select the root directory `D:\guru` (or the folder where you cloned this repository).
-3. Select **SmartLibrary** and click **Finish**.
-4. In Package Explorer, open `src/com/smartlibrary/Main.java`.
-5. Right-click `Main.java` → **Run As → Java Application**.
+1. Choose **File → Import → General → Existing Projects into Workspace**.
+2. Select the repository folder and import **SmartLibrary**.
+3. Set the project JRE to **Java 17 or newer** if Eclipse asks.
+4. Open `src/com/smartlibrary/Main.java` and choose **Run As → Java Application**.
+5. Use the numbered menu in Eclipse's **Console** tab.
 
-If Eclipse asks for a JRE, select an installed JDK 17 or newer. The app opens in a desktop window with four tabs. Eclipse compiles into `bin/` automatically.
+The first run creates a local `data/` folder in the project directory with the sample catalogue. Only this top-level runtime folder is ignored by Git; the Java source package `src/com/smartlibrary/data/` is included in the repository.
 
-## Features and DSA mapping
+## What the program does
 
-| Screen | Feature | Syllabus topic |
-| --- | --- | --- |
-| Catalogue & Search | Search titles, authors, and topics | KMP (M1) |
-| Catalogue & Search | Search abstracts | Rabin–Karp (M1) |
-| Catalogue & Search | Search comma-separated keywords together | Aho–Corasick (M1) |
-| Catalogue & Search | Suggest a close spelling after no results | Levenshtein distance (M3) |
-| Similarity | Find the longest phrase shared by two abstracts | Suffix array + Kasai LCP (M2) |
-| Similarity | Choose documents to inspect across similar pairs | Vertex Cover 2-approximation (M5) |
-| Reviewer Matching | Assign eligible reviewers to papers | Bipartite matching (M4) |
-| Dashboard | Rank documents by view count | Randomized QuickSort (M6) |
-| Dashboard | Keep a sample of search queries | Reservoir Sampling (M6) |
+| Menu feature | Suitable DSA topic |
+| --- | --- |
+| Search title, author, and topic | KMP (M1) |
+| Search a phrase in abstracts | Rabin–Karp (M1) |
+| Search several keywords in one pass | Aho–Corasick (M1) |
+| Suggest a corrected spelling | Levenshtein distance (M3) |
+| Compare abstracts by longest common phrase | Suffix array + Kasai LCP (M2) |
+| Identify documents to review from similar pairs | Vertex Cover 2-approximation (M5) |
+| Assign research papers to reviewers | Bipartite matching (M4) |
+| Rank documents by views | Randomized QuickSort (M6) |
+| Sample search queries | Reservoir Sampling (M6) |
 
-Documents, view counts, and search usage are saved as **local files** in `data/`. This is just file storage inside the desktop app; it does not use a backend service. The folder is ignored by Git. For a fresh demo, close the app and delete `data/`.
+The menu also lets you browse, add, edit, open, and delete documents. Documents, view counts, and usage counters are saved as local files. The eight starting titles and all reviewers are fictional sample data.
 
-## Suggested live demo
+## Quick demo sequence
 
-1. Search `machine` in **Keyword (KMP)** mode. Search `machien` to show the correction suggestion.
-2. Search `graphs reveal connections` in **Abstract phrase (Rabin-Karp)** mode.
-3. Search `climate, networks` in **Multiple keywords (Aho-Corasick)** mode.
-4. Add, edit, and open a document. Opening increases its view count; restarting the app shows that it was saved.
-5. Compare *Learning Machines* and *Small Models, Big Ideas* under **Similarity**, then scan similar pairs.
-6. Show paper assignments under **Reviewer Matching** and popularity under **Dashboard**.
+1. Choose **2 → 1** and search `machine`; two matching documents appear.
+2. Choose **2 → 1** and search `machien`; the program suggests `machine`.
+3. Choose **2 → 2** and search `graphs reveal connections`.
+4. Choose **2 → 3** and search `climate, networks`.
+5. Choose **7** and compare document IDs `2` and `5`.
+6. Choose **8** to scan similar pairs, **9** to assign reviewers, and **10** for the usage dashboard.
+
+The similarity check reports phrase overlap to help decide what to inspect. It is not a plagiarism verdict. A pair is flagged when the abstracts share at least 24 characters.
 
 ## Source layout
 
 ```text
 src/com/smartlibrary/
-  Main.java              Run this class in Eclipse
-  algorithm/             Nine DSA implementations
-  data/                  Local file persistence
-  model/                 Document and Reviewer
-  service/               Library features
-  ui/                    Swing screens and forms
+  Main.java               Eclipse entry point
+  ConsoleApp.java         Numbered demo menu
+  algorithm/              DSA implementations
+  data/                   LibraryRepository.java (local file storage)
+  model/                  Document and Reviewer
+  service/                Search, library, similarity, reviewers, usage
 ```
 
-The eight starting titles and all reviewer names are fictional sample data. Phrase overlap is a review signal, not a plagiarism decision. The similarity threshold is 24 shared characters so the example pairs are easy to demonstrate.
+The project uses Java 17 language features. To reset the demo, close the program and delete the top-level `data/` folder. Do not delete `src/com/smartlibrary/data/` because it contains a Java source file.
