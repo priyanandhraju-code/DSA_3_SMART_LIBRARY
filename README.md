@@ -1,42 +1,73 @@
-# SmartLibrary — Java DSA Student Project
+# SmartLibrary — Java DSA Hackathon Project
 
-SmartLibrary is a small **Java console application** for a sample digital library. It includes eight fictional books and research papers. It needs no database, web server, or external libraries.
+SmartLibrary is a **Java desktop application** for browsing a digital library, comparing research documents, assigning reviewers, and exploring usage. It starts with eight fictional books and papers. You can add, edit, delete, and open documents; changes are saved locally.
 
-## Requirements and run commands
+## Run
 
-Use JDK 17 or newer. In PowerShell opened at the project folder:
+Install JDK 17 or newer and Maven. From the project folder:
 
 ```powershell
-javac -d out (Get-ChildItem src/smartlibrary/*.java).FullName
-java -cp out smartlibrary.SmartLibrary
+mvn package
+java -jar target/smartlibrary-1.0.0.jar
 ```
 
-## What you can demonstrate
+For development, `mvn compile exec:java` also launches the app. Run `mvn test` for the algorithm and application-flow checks.
 
-1. **List documents** — see all eight sample items.
-2. **Search title, author, or topic** — KMP finds a keyword or phrase. Try `machine`.
-3. **Search abstracts** — Rabin–Karp finds a phrase using a rolling hash. Try `graphs`.
-4. **Open a document** — enter its ID to read the abstract and increase its view count.
-5. **Rank by views** — Randomized QuickSort orders documents by popularity.
-6. **Show usage statistics** — see searches made in this run and total sample views.
+The first run creates a `data/` folder with the sample catalogue and usage information. This folder is ignored by Git so each user's demo data stays local. To reset the sample data, close the app and delete the `data/` folder.
 
-If a one-word search finds nothing, Levenshtein distance suggests a close word from the catalogue. Try `machien`.
+## Features and DSA mapping
 
-## Algorithms used
+| Module | Feature shown in the app | Suitable syllabus topic |
+| --- | --- | --- |
+| Catalogue & Search | Search title, author, and topic | KMP (M1) |
+| Catalogue & Search | Search inside abstracts | Rabin–Karp (M1) |
+| Catalogue & Search | Search several comma-separated keywords at once | Aho–Corasick (M1) |
+| Catalogue & Search | Suggest a close word after an unsuccessful search | Levenshtein distance (M3) |
+| Similarity | Find the longest phrase shared by two abstracts | Suffix array + Kasai LCP (M2) |
+| Similarity | Flag documents covering all similar-document pairs | Vertex Cover 2-approximation (M5) |
+| Reviewer Matching | Assign eligible reviewers to research papers, one paper per reviewer | Bipartite matching (M4) |
+| Dashboard | Rank documents by views | Randomized QuickSort (M6) |
+| Dashboard | Keep a small representative sample of search queries | Reservoir Sampling (M6) |
 
-| Topic from syllabus | Where used | Simple explanation | Time complexity |
-| --- | --- | --- | --- |
-| KMP (M1) | Title, author, and topic search | A prefix table avoids restarting the keyword search after a mismatch. | O(n + m) per document |
-| Rabin–Karp (M1) | Abstract search | A rolling hash checks each text window. Matching hashes are verified character by character. | Average O(n + m) per document; worst O(nm) |
-| Levenshtein distance (M3) | Typo suggestion | Dynamic programming counts insertions, deletions, and replacements needed to change one word into another. | O(nm) time, O(m) space per comparison |
-| Randomized QuickSort (M6) | Most viewed ranking | A random pivot partitions documents by their view counts. | Expected O(n log n), worst O(n²) |
+The similarity screen checks **phrase overlap**, which is useful for identifying documents to inspect. It does not decide plagiarism. The Vertex Cover feature selects documents for human review when a pair shares at least 24 characters. The threshold is a demo setting in `SimilarityService.java`.
 
-Here, `n` and `m` are the lengths of the searched text and query, except for QuickSort where `n` is the number of documents.
+## Suggested hackathon walkthrough
 
-## Project structure
+1. Open **Catalogue & Search**. Search `machine` with KMP. Then search `machien` to show the spelling suggestion.
+2. Select **Abstract phrase (Rabin-Karp)** and search `graphs reveal connections`.
+3. Select **Multiple keywords (Aho-Corasick)** and search `climate, networks`.
+4. Add a document, open it to increase its view count, then edit it. Restart the app to show that changes persist.
+5. In **Similarity**, compare *Learning Machines* and *Small Models, Big Ideas*. Run **Scan similar pairs** to show the document-review set.
+6. In **Reviewer Matching**, show automatic paper assignments based on expertise.
+7. In **Dashboard**, show the most-viewed ranking and sampled search queries.
 
-- `src/smartlibrary/Document.java` — library item data.
-- `src/smartlibrary/Algorithms.java` — the four DSA algorithms.
-- `src/smartlibrary/SmartLibrary.java` — sample data and console menu.
+## Project layout
 
-The catalogue and starting view counts are fictional. Searches and views exist only in memory and reset when the program restarts. This keeps the project small enough to explain in a class demo.
+```text
+src/main/java/com/smartlibrary/
+  Main.java                     application entry point
+  algorithm/                    nine DSA implementations
+  data/LibraryRepository.java   local file persistence
+  model/                        Document and Reviewer
+  service/                      catalogue, search, similarity, reviews, usage
+  ui/                           Swing screens and document form
+pom.xml                         Maven build
+```
+
+The app uses only Java's standard library at runtime. Maven compiles the source and launches the Swing interface. Search counts, sample queries, documents, and view counts are saved on the local computer. The titles and authors are fictional demonstration data.
+
+## Complexity at a glance
+
+| Algorithm | Typical time |
+| --- | --- |
+| KMP | `O(n + m)` per text |
+| Rabin–Karp | Average `O(n + m)`; worst `O(nm)` with repeated hash matches |
+| Aho–Corasick | `O(text length + total keyword length + matches)` |
+| Levenshtein | `O(nm)` time and `O(m)` space per word comparison |
+| Suffix array + Kasai LCP | `O(n log² n)` construction with prefix doubling and sorting; `O(n)` LCP |
+| Bipartite matching | `O(VE)` with augmenting paths |
+| Vertex Cover 2-approximation | `O(E)` after similarity edges are built |
+| Randomized QuickSort | Expected `O(n log n)`; worst `O(n²)` |
+| Reservoir Sampling | `O(1)` expected work and `O(k)` memory per new query |
+
+Here `n` and `m` usually refer to text/query lengths, `V` and `E` to graph vertices/edges, and `k` to the sample size. The collection is intentionally small so every result can be explained live.
