@@ -14,7 +14,15 @@ import java.util.TreeSet;
 
 public class SearchService {
     public enum Mode { KEYWORD, ABSTRACT, MULTI_KEYWORD }
-    public record Result(List<Document> documents, String suggestion) { }
+    public static final class Result {
+        private final List<Document> documents;
+        private final String suggestion;
+        public Result(List<Document> documents, String suggestion) {
+            this.documents = documents; this.suggestion = suggestion;
+        }
+        public List<Document> documents() { return documents; }
+        public String suggestion() { return suggestion; }
+    }
     private final LibraryService library;
     private final UsageService usage;
 

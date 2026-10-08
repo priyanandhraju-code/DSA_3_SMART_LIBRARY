@@ -39,8 +39,11 @@ public final class Style {
 
     public static JButton primaryButton(String text) {
         JButton button = new JButton(text);
+        button.setContentAreaFilled(false);
+        button.setOpaque(true);
         button.setBackground(GREEN);
         button.setForeground(Color.WHITE);
+        button.setBorder(BorderFactory.createEmptyBorder(8, 14, 8, 14));
         button.setFocusPainted(false);
         return button;
     }

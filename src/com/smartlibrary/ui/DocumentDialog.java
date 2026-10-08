@@ -12,7 +12,20 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public final class DocumentDialog {
-    public record Form(String type, String title, String author, int year, String topic, String abstractText) { }
+    public static final class Form {
+        private final String type, title, author, topic, abstractText;
+        private final int year;
+        public Form(String type, String title, String author, int year, String topic, String abstractText) {
+            this.type = type; this.title = title; this.author = author;
+            this.year = year; this.topic = topic; this.abstractText = abstractText;
+        }
+        public String type() { return type; }
+        public String title() { return title; }
+        public String author() { return author; }
+        public int year() { return year; }
+        public String topic() { return topic; }
+        public String abstractText() { return abstractText; }
+    }
     private DocumentDialog() { }
 
     public static Form show(Component parent, Document original) {

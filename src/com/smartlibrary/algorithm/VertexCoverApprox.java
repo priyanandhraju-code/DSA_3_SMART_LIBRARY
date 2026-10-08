@@ -7,7 +7,12 @@ import java.util.Set;
 
 /** Picks both endpoints of each uncovered edge: a 2-approximation for vertex cover. */
 public final class VertexCoverApprox {
-    public record Edge(int first, int second) { }
+    public static final class Edge {
+        private final int first, second;
+        public Edge(int first, int second) { this.first = first; this.second = second; }
+        public int first() { return first; }
+        public int second() { return second; }
+    }
     private VertexCoverApprox() { }
 
     public static Set<Integer> chooseDocumentsToReview(List<Edge> similarPairs) {

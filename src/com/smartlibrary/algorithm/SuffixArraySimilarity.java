@@ -4,7 +4,18 @@ import java.util.Arrays;
 
 /** Longest shared substring found with a prefix-doubling suffix array and Kasai LCP. */
 public final class SuffixArraySimilarity {
-    public record Result(String phrase, int length) { }
+    public static final class Result {
+        private final String phrase;
+        private final int length;
+
+        public Result(String phrase, int length) {
+            this.phrase = phrase;
+            this.length = length;
+        }
+
+        public String phrase() { return phrase; }
+        public int length() { return length; }
+    }
     private SuffixArraySimilarity() { }
 
     public static Result compare(String first, String second) {

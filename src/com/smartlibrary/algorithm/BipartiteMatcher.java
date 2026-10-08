@@ -7,7 +7,13 @@ import java.util.List;
 
 /** Augmenting-path matching: each reviewer and paper appears at most once. */
 public final class BipartiteMatcher {
-    public record Assignment(Document paper, Reviewer reviewer) { }
+    public static final class Assignment {
+        private final Document paper;
+        private final Reviewer reviewer;
+        public Assignment(Document paper, Reviewer reviewer) { this.paper = paper; this.reviewer = reviewer; }
+        public Document paper() { return paper; }
+        public Reviewer reviewer() { return reviewer; }
+    }
     private BipartiteMatcher() { }
 
     public static List<Assignment> assign(List<Document> papers, List<Reviewer> reviewers) {
