@@ -20,7 +20,7 @@ public class LibraryRepository {
 
     public LibraryRepository(Path directory) {
         this.directory = directory;
-        documentsFile = directory.resolve("documents.tsv");
+        documentsFile = directory.resolve("documents.csv");
         usageFile = directory.resolve("usage.properties");
     }
 
@@ -30,11 +30,15 @@ public class LibraryRepository {
             saveDocuments(sample);
             return sample;
         }
+        return readDocuments();
+    }
+
+    private List<Document> readDocuments() {
         try {
             List<Document> documents = new ArrayList<>();
             for (String line : Files.readAllLines(documentsFile, StandardCharsets.UTF_8)) {
                 if (line.isBlank()) continue;
-                String[] parts = line.split("\t", -1);
+                String[] parts = line.split(",", -1);
                 if (parts.length != 8) throw new IOException("Invalid document row");
                 documents.add(new Document(Integer.parseInt(parts[0]), decode(parts[1]), decode(parts[2]),
                         decode(parts[3]), Integer.parseInt(parts[4]), decode(parts[5]), decode(parts[6]),
@@ -51,9 +55,9 @@ public class LibraryRepository {
             Files.createDirectories(directory);
             List<String> lines = new ArrayList<>();
             for (Document d : documents) {
-                lines.add(d.id() + "\t" + encode(d.type()) + "\t" + encode(d.title()) + "\t"
-                        + encode(d.author()) + "\t" + d.year() + "\t" + encode(d.topic()) + "\t"
-                        + encode(d.abstractText()) + "\t" + d.views());
+                lines.add(d.id() + "," + encode(d.type()) + "," + encode(d.title()) + ","
+                        + encode(d.author()) + "," + d.year() + "," + encode(d.topic()) + ","
+                        + encode(d.abstractText()) + "," + d.views());
             }
             Path temp = directory.resolve("documents.tmp");
             Files.write(temp, lines, StandardCharsets.UTF_8);

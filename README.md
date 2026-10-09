@@ -10,7 +10,7 @@ SmartLibrary is a **pure Java console application** for a sample digital library
 4. Open `src/com/smartlibrary/Main.java` and choose **Run As → Java Application**.
 5. Use the numbered menu in Eclipse's **Console** tab.
 
-The first run creates a local `data/` folder in the project directory with the sample catalogue. Only this top-level runtime folder is ignored by Git; the Java source package `src/com/smartlibrary/data/` is included in the repository.
+The catalogue is stored in `data/documents.csv`. Other runtime files in `data/` are ignored by Git; the Java source package `src/com/smartlibrary/data/` is included in the repository.
 
 ## What the program does
 
